@@ -1,6 +1,5 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
   Patch,
@@ -10,34 +9,31 @@ import {
 import { WorkoutsService } from './workouts.service';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { UpdateWorkoutDto } from './dto/update-workout.dto';
+import { SearchWorkoutDto } from './dto/search-workout.dto';
 
 @Controller('workouts')
 export class WorkoutsController {
   constructor(private readonly workoutsService: WorkoutsService) {}
 
 
+  @Post("/createWorkout")
+  createWorkout(@Body() createWorkoutUserInput: CreateWorkoutDto) {
+    return this.workoutsService.createWorkout(createWorkoutUserInput);
+  }
+
   @Post()
-  create(@Body() createWorkoutDto: CreateWorkoutDto) {
-    return this.workoutsService.create(createWorkoutDto);
+  getWorkouts(@Body() searchWorkoutUserInput:SearchWorkoutDto) {
+    return this.workoutsService.getWorkouts(searchWorkoutUserInput);
   }
 
-  @Get()
-  findAll() {
-    return this.workoutsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.workoutsService.findOne(+id);
-  }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateWorkoutDto: UpdateWorkoutDto) {
-    return this.workoutsService.update(+id, updateWorkoutDto);
+  update(@Param('id') id: string, @Body() updateWorkoutUserInput: UpdateWorkoutDto) {
+    return this.workoutsService.updateWorkout(id, updateWorkoutUserInput);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.workoutsService.remove(+id);
+    return this.workoutsService.remove(id);
   }
 }
