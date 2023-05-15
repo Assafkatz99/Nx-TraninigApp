@@ -17,19 +17,19 @@ export class WorkoutsController {
 
 
   @Post("/createWorkout")
-  createWorkout(@Body() createWorkoutDto: CreateWorkoutDto) {
-    return this.workoutsService.createWorkout(createWorkoutDto);
+  createWorkout(@Body() createWorkoutUserInput: CreateWorkoutDto) {
+    return this.workoutsService.createWorkout(createWorkoutUserInput);
   }
 
   @Post()
-  getWorkouts(@Body() SearchWorkoutDto:SearchWorkoutDto) {
-    return this.workoutsService.getWorkouts(SearchWorkoutDto);
+  getWorkouts(@Body() searchWorkoutUserInput:SearchWorkoutDto) {
+    return this.workoutsService.getWorkouts(searchWorkoutUserInput);
   }
 
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateWorkoutDto: UpdateWorkoutDto) {
-    return this.workoutsService.updateWorkout(id, updateWorkoutDto);
+  update(@Param('id') id: string, @Body() updateWorkoutUserInput: UpdateWorkoutDto) {
+    return this.workoutsService.updateWorkout(id, updateWorkoutUserInput);
   }
 
   @Delete(':id')
