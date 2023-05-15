@@ -4,7 +4,7 @@ import { HydratedDocument } from "mongoose";
 
 
 
-@Schema()
+@Schema({timestamps:true})
 export class Workout{
 
     @Prop({type: Date, required:true})

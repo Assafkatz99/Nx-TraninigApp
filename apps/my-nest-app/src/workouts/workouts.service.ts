@@ -10,35 +10,23 @@ import { SearchWorkoutDto } from './dto/search-workout.dto';
 export class WorkoutsService {
   constructor(@InjectModel(Workout.name) private WorkoutModel: Model<WorkoutDocument> ){}
 
-  createWorkout(createWorkoutDto: CreateWorkoutDto) {
+  createWorkout(createWorkoutUserInput : CreateWorkoutDto) {
 
-    return this.WorkoutModel.create({
-      date: createWorkoutDto.date,
-      type: createWorkoutDto.type,
-      description: createWorkoutDto.description,
-      duration:createWorkoutDto.duration,
-      difficulty: createWorkoutDto.difficulty
-    });
+    return this.WorkoutModel.create(createWorkoutUserInput);
   }
 
-  getWorkouts(SearchWorkoutDto : SearchWorkoutDto) {
+  getWorkouts(searchWorkoutUserInput : SearchWorkoutDto) {
     return this.WorkoutModel.find()
     .sort({ date: 1 })
-    .skip(SearchWorkoutDto.skipAmount)
-    .limit(SearchWorkoutDto.limitAmount)
+    .skip(searchWorkoutUserInput.skipAmount)
+    .limit(searchWorkoutUserInput.limitAmount)
   }
 
-  updateWorkout(id_:string,updateWorkoutDto: UpdateWorkoutDto) {
-    return this.WorkoutModel.findByIdAndUpdate(id_,{
-      date: updateWorkoutDto.date,
-      type: updateWorkoutDto.type,
-      description: updateWorkoutDto.description,
-      duration:updateWorkoutDto.duration,
-      difficulty: updateWorkoutDto.difficulty
-    })
+  updateWorkout(id:string,updateWorkoutUserInput: UpdateWorkoutDto) {
+    return this.WorkoutModel.findByIdAndUpdate(id,updateWorkoutUserInput)
   }
 
-  remove(id_: string) {
-    return this.WorkoutModel.findByIdAndRemove(id_);
+  remove(id: string) {
+    return this.WorkoutModel.findByIdAndRemove(id);
   }
 }

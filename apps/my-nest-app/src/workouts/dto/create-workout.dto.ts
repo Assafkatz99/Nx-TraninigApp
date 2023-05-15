@@ -1,4 +1,4 @@
-import { IsDateString, IsEnum, IsNumber, IsString } from "class-validator";
+import { IsDateString, IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import {  WorkoutTypes, WorkoutDifficulty  } from "@nx-test/types"
 
 
@@ -10,6 +10,7 @@ export class CreateWorkoutDto {
     @IsEnum(WorkoutTypes)
     type: WorkoutTypes;
 
+    @IsNotEmpty()
     @IsString()
     description: string;
 

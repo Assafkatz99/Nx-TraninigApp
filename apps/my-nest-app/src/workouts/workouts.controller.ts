@@ -29,8 +29,6 @@ export class WorkoutsController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateWorkoutDto: UpdateWorkoutDto) {
-    console.log(id)
-    console.log(updateWorkoutDto)
     return this.workoutsService.updateWorkout(id, updateWorkoutDto);
   }
 
