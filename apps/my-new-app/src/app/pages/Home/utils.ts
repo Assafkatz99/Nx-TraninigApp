@@ -1,0 +1,1 @@
+export const workoutProperties = ["Date","Type","Description","Duration","Difficulty", "Edit", "Delete"]
