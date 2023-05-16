@@ -1,26 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { UpdateWorkoutDto } from './dto/update-workout.dto';
+import { Workout, WorkoutDocument } from './workouts.schema';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { SearchWorkoutDto } from './dto/search-workout.dto';
 
 @Injectable()
 export class WorkoutsService {
-  create(createWorkoutDto: CreateWorkoutDto) {
-    return 'This action adds a new workout';
+  constructor(@InjectModel(Workout.name) private WorkoutModel: Model<WorkoutDocument> ){}
+
+  createWorkout(createWorkoutUserInput : CreateWorkoutDto) {
+
+    return this.WorkoutModel.create(createWorkoutUserInput);
   }
 
-  findAll() {
-    return `This action returns all workouts`;
+  getWorkouts(searchWorkoutUserInput : SearchWorkoutDto) {
+    return this.WorkoutModel.find()
+    .sort({ date: 1 })
+    .skip(searchWorkoutUserInput.skipAmount)
+    .limit(searchWorkoutUserInput.limitAmount)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} workout`;
+  updateWorkout(id:string,updateWorkoutUserInput: UpdateWorkoutDto) {
+    return this.WorkoutModel.findByIdAndUpdate(id,updateWorkoutUserInput)
   }
 
-  update(id: number, updateWorkoutDto: UpdateWorkoutDto) {
-    return `This action updates a #${id} workout`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} workout`;
+  remove(id: string) {
+    return this.WorkoutModel.findByIdAndRemove(id);
   }
 }
