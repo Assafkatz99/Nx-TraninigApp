@@ -8,22 +8,24 @@ import { SearchWorkoutDto } from './dto/search-workout.dto';
 
 @Injectable()
 export class WorkoutsService {
-  constructor(@InjectModel(Workout.name) private WorkoutModel: Model<WorkoutDocument> ){}
+  constructor(
+    @InjectModel(Workout.name) private WorkoutModel: Model<WorkoutDocument>
+  ) {}
 
-  createWorkout(createWorkoutUserInput : CreateWorkoutDto) {
-
+  createWorkout(createWorkoutUserInput: CreateWorkoutDto) {
     return this.WorkoutModel.create(createWorkoutUserInput);
   }
 
-  getWorkouts(searchWorkoutUserInput : SearchWorkoutDto) {
+  getWorkouts(searchWorkoutUserInput: SearchWorkoutDto) {
     return this.WorkoutModel.find()
-    .sort({ date: 1 })
-    .skip(searchWorkoutUserInput.skipAmount)
-    .limit(searchWorkoutUserInput.limitAmount)
+      .sort({ date: -1 })
+      .skip(searchWorkoutUserInput.skipAmount)
+      .limit(searchWorkoutUserInput.limitAmount)
+      .select('-__v');
   }
 
-  updateWorkout(id:string,updateWorkoutUserInput: UpdateWorkoutDto) {
-    return this.WorkoutModel.findByIdAndUpdate(id,updateWorkoutUserInput)
+  updateWorkout(id: string, updateWorkoutUserInput: UpdateWorkoutDto) {
+    return this.WorkoutModel.findByIdAndUpdate(id, updateWorkoutUserInput);
   }
 
   remove(id: string) {

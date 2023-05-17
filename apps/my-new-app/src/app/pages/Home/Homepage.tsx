@@ -3,6 +3,7 @@ import { LogoDiv, containerSX } from './styles';
 import {
   Button,
   Container,
+  Modal,
   Table,
   TableBody,
   TableCell,
@@ -10,48 +11,54 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
-import {workoutProperties} from "./utils"
+import { workoutProperties, dataExample } from './utils';
+import TableRowComponent from './components/TableRowComponent/TableRowComponent';
+import ModalContent from './components/ModalContent/ModalContent';
 
 const Homepage: React.FC = () => {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
     <Container sx={containerSX}>
       <LogoDiv>LOGO</LogoDiv>
 
-      <Button variant="contained">Add Workout</Button>
+      <Button variant="contained" onClick={()=>{handleOpen()}}>Add Workout</Button>
 
-      <TableContainer>
-      <Table stickyHeader aria-label="sticky table">
-          <TableHead >
+      <TableContainer
+        sx={{ maxHeight: '60vh', boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.4)' }}
+      >
+        <Table stickyHeader aria-label="sticky table">
+          <TableHead>
             <TableRow>
-              {workoutProperties.map((headerLabel)=>{return(
-                <TableCell align='center' sx={{fontWeight:"bold", bgcolor:"#eee", width:`${100/(workoutProperties.length)}%`}}>{headerLabel}</TableCell>
-              )})}
+              {workoutProperties.map((headerLabel) => {
+                return (
+                  <TableCell
+                    align="center"
+                    sx={{
+                      fontWeight: 'bold',
+                      bgcolor: '#eee',
+                      maxWidth: `${100 / workoutProperties.length}%`,
+                    }}
+                  >
+                    {headerLabel}
+                  </TableCell>
+                );
+              })}
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow >
-            {workoutProperties.map(()=>{return(
-                <TableCell align='center'>DATA</TableCell>
-              )})}
-            </TableRow>
-            <TableRow >
-            {workoutProperties.map(()=>{return(
-                <TableCell align='center'>DATA</TableCell>
-              )})}
-            </TableRow>
-            <TableRow >
-            {workoutProperties.map(()=>{return(
-                <TableCell align='center'>DATA</TableCell>
-              )})}
-            </TableRow>
-            <TableRow >
-            {workoutProperties.map(()=>{return(
-                <TableCell align='center'>DATA</TableCell>
-              )})}
-            </TableRow>
+            {dataExample.map((data) => (
+              <TableRowComponent data={data} />
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Modal open={open} onClose={handleClose}>
+        <ModalContent modalType="add" />
+      </Modal>
     </Container>
   );
 };

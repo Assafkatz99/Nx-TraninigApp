@@ -6,12 +6,12 @@ export const containerSX ={
     alignItems:"center",
     justifyContent:"center",
     py:2,
-    gap:"50px"
+    gap:"30px"
 }
 
 export const LogoDiv  = styled.div`
-width: 200px;
-height: 100px;
+width: 300px;
+height: 150px;
 border: 1px solid black;
 border-radius: 10px;
 text-align: center;
