@@ -8,7 +8,7 @@ import {
   RadioGroup,
   TextField,
 } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
 import { ITableRow } from '../TableRowComponent/TableRowComponent';
 import { useFormik } from 'formik';
 import {
@@ -18,12 +18,18 @@ import {
 } from './CreateEditModalForm.styles';
 import { WorkoutTypes, WorkoutDifficulty } from '@nx-test/types';
 import { convertDurationStringToNumber, convertWorkoutDataToRender } from './CreateEditModalForm.utils';
+import { postWorkout } from '../Homepage.api';
+import { ModalContext } from '../../../../contexts/modalProvider.context'
+import { useQueryClient } from '@tanstack/react-query';
 
 
 
 const CreateEditModalForm: React.FC<{data?:ITableRow}> = (workoutData) => {
   const initialValues = convertWorkoutDataToRender(workoutData.data)
 
+  const clientQuery = useQueryClient()
+
+  const {toggleModal,setToggleModal} = useContext(ModalContext)
 
 
   const formik = useFormik({
@@ -32,6 +38,17 @@ const CreateEditModalForm: React.FC<{data?:ITableRow}> = (workoutData) => {
       const convertedDuration = convertDurationStringToNumber(values.duration);
       const submitValue = {...values, "duration":convertedDuration, "date":new Date(values.date).toISOString()}
       console.log(submitValue)
+
+      if(workoutData.data){
+        //edit
+      }else{
+        const response = postWorkout(submitValue)
+        response.catch(err=>console.log(err)).then(res=>console.log(res))
+        
+        setToggleModal(false)
+      }
+
+      clientQuery.refetchQueries(["getWorkouts"])
     },
   });
   return (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { LogoDiv, containerSX } from './styles';
 import {
   Button,
@@ -15,14 +15,13 @@ import { workoutProperties, dataExample } from './utils';
 import TableRowComponent from './components/TableRowComponent/TableRowComponent';
 import ModalContent from './components/ModalContent/ModalContent';
 import { useGetWorkouts } from './components/Homepage.api';
+import { ModalContext } from '../../contexts/modalProvider.context';
 
 const Homepage: React.FC = () => {
 
+  const {toggleModal,setToggleModal} = useContext(ModalContext)
+  
   const { data, isLoading } = useGetWorkouts();
-
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   return (
     
@@ -35,7 +34,7 @@ const Homepage: React.FC = () => {
           <Button
             variant="contained"
             onClick={() => {
-              handleOpen();
+              setToggleModal(true);
             }}
           >
             Add Workout
@@ -75,7 +74,7 @@ const Homepage: React.FC = () => {
             </Table>
           </TableContainer>
 
-          <Modal open={open} onClose={handleClose}>
+          <Modal open={toggleModal} onClose={()=>setToggleModal(false)}>
             <ModalContent modalType="add" />
           </Modal>
         </Container>
