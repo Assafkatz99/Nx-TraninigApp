@@ -22,6 +22,7 @@ height:fit-content;
 `
 
 export const DeleteModalStyle = styled(ModalBaseStyle)`
+width:50%;
 min-height: 50px;
 height:fit-content;
 `

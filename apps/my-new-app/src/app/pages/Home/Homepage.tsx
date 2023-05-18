@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LogoDiv, containerSX } from './styles';
 import {
   Button,
@@ -11,75 +11,71 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
-import { workoutProperties, dataExample } from './utils';
+import { workoutProperties } from './utils';
 import TableRowComponent from './components/TableRowComponent/TableRowComponent';
 import ModalContent from './components/ModalContent/ModalContent';
-import { useGetWorkouts } from './components/Homepage.api';
-import { ModalContext } from '../../contexts/modalProvider.context';
+import { useGetWorkouts } from './Homepage.api';
 
 const Homepage: React.FC = () => {
+  const [toggleModal, setToggleModal] = useState<boolean>(false);
 
-  const {toggleModal,setToggleModal} = useContext(ModalContext)
-  
   const { data, isLoading } = useGetWorkouts();
 
-  return (
-    
-      isLoading ? (
-        <>loading...</>
-      ) : (
-        <Container sx={containerSX}>
-          <LogoDiv>LOGO</LogoDiv>
 
-          <Button
-            variant="contained"
-            onClick={() => {
-              setToggleModal(true);
-            }}
-          >
-            Add Workout
-          </Button>
+  return isLoading ? (
+    <>loading...</>
+  ) : (
+    <Container sx={containerSX}>
+      <LogoDiv>LOGO</LogoDiv>
 
-          <TableContainer
-            sx={{
-              maxHeight: '60vh',
-              boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.4)',
-            }}
-          >
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow >
-                  {workoutProperties.map((headerLabel, i ) => {
-                    return (
-                      <TableCell
-                        
-                        align="center"
-                        sx={{
-                          fontWeight: 'bold',
-                          bgcolor: '#eee',
-                          maxWidth: `${100 / workoutProperties.length}%`,
-                        }}
-                      >
-                        {headerLabel}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {data?.data.map((data) => (
-                  <TableRowComponent data={data} />
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+      <Button
+        variant="contained"
+        onClick={() => {
+          setToggleModal(true);
+        }}
+      >
+        Add Workout
+      </Button>
 
-          <Modal open={toggleModal} onClose={()=>setToggleModal(false)}>
-            <ModalContent modalType="add" />
-          </Modal>
-        </Container>
-      )
-    
+      <TableContainer
+        sx={{
+          maxHeight: '60vh',
+          boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.4)',
+        }}
+      >
+        <Table stickyHeader aria-label="sticky table">
+          <TableHead>
+            <TableRow key={1}>
+              {workoutProperties.map((headerLabel, index) => {
+                return (
+                  <TableCell
+                    key={index}
+                    align="center"
+                    sx={{
+                      fontWeight: 'bold',
+                      bgcolor: '#eee',
+                      maxWidth: `${100 / workoutProperties.length}%`,
+                    }}
+                  >
+                    {headerLabel}
+                  </TableCell>
+                );
+              })}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data?.data.map((rowData, index) => {
+              return <TableRowComponent key={index} data={rowData} />;
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Modal open={toggleModal} onClose={() => setToggleModal(false)}>
+        <div>
+          <ModalContent toggleFn={setToggleModal} modalType="add" />
+        </div>
+      </Modal>
+    </Container>
   );
 };
 

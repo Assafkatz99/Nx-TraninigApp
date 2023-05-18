@@ -17,49 +17,62 @@ import {
   elementBaseStyle,
 } from './CreateEditModalForm.styles';
 import { WorkoutTypes, WorkoutDifficulty } from '@nx-test/types';
-import { convertDurationStringToNumber, convertWorkoutDataToRender } from './CreateEditModalForm.utils';
-import { postWorkout } from '../Homepage.api';
-import { ModalContext } from '../../../../contexts/modalProvider.context'
+import {
+  convertDurationStringToNumber,
+  convertWorkoutDataToRender,
+} from './CreateEditModalForm.utils';
+import { editWorkout, postWorkout } from '../../Homepage.api';
 import { useQueryClient } from '@tanstack/react-query';
 
-
-
-const CreateEditModalForm: React.FC<{data?:ITableRow}> = (workoutData) => {
-  const initialValues = convertWorkoutDataToRender(workoutData.data)
-
-  const clientQuery = useQueryClient()
-
-  const {toggleModal,setToggleModal} = useContext(ModalContext)
+const CreateEditModalForm: React.FC<{ data?: ITableRow, toggleFn:(a:boolean)=>void }> = (workoutData) => {
+  const initialValues = convertWorkoutDataToRender(workoutData.data);
+  const clientQuery = useQueryClient();
 
 
   const formik = useFormik({
     initialValues,
     onSubmit: (values) => {
       const convertedDuration = convertDurationStringToNumber(values.duration);
-      const submitValue = {...values, "duration":convertedDuration, "date":new Date(values.date).toISOString()}
-      console.log(submitValue)
+      const submitValue = {
+        ...values,
+        duration: convertedDuration,
+        date: new Date(new Date(values.date).setTime(new Date().getTime())).toISOString()
+      };
 
-      if(workoutData.data){
-        //edit
-      }else{
-        const response = postWorkout(submitValue)
-        response.catch(err=>console.log(err)).then(res=>console.log(res))
-        
-        setToggleModal(false)
+      if (workoutData.data) {
+        const response = editWorkout(submitValue,workoutData.data._id);
+        response
+          .catch((err) => console.log(err))
+          .then((res) => {
+          console.log(res)
+          clientQuery.refetchQueries(['getWorkouts']);
+          }
+          );
+          
+      } else {
+        const response = postWorkout(submitValue);
+        response
+          .catch((err) => console.log(err))
+          .then((res) => {
+          console.log(res)
+          clientQuery.refetchQueries(['getWorkouts']);
+
+        }
+        );
       }
-
-      clientQuery.refetchQueries(["getWorkouts"])
+        workoutData.toggleFn(false)
+      
     },
   });
   return (
     <>
-      <h2>{Object.keys(workoutData).length > 0 ? 'Edit' : 'Add'} Workout</h2>
+      <h2>{workoutData.data? 'Edit' : 'Add'} Workout</h2>
       <form style={{ width: '100%' }} onSubmit={formik.handleSubmit}>
         <FormStyles>
-        <FormGroupWrapper>
+          <FormGroupWrapper>
             <FormControl>
               <TextField
-              required
+                required
                 sx={elementBaseStyle}
                 label="Date"
                 name="date"
@@ -75,7 +88,7 @@ const CreateEditModalForm: React.FC<{data?:ITableRow}> = (workoutData) => {
           </FormGroupWrapper>
           <FormGroupWrapper>
             <FormControl component="fieldset">
-              <FormLabel disabled >Workout Type</FormLabel>
+              <FormLabel disabled>Workout Type</FormLabel>
               <RadioGroup
                 name="type"
                 value={formik.values.type}
@@ -113,19 +126,23 @@ const CreateEditModalForm: React.FC<{data?:ITableRow}> = (workoutData) => {
                 onChange={formik.handleChange}
                 variant="outlined"
               >
-                <MenuItem value={WorkoutDifficulty.EASY}>{WorkoutDifficulty.EASY}</MenuItem>
-                <MenuItem value={WorkoutDifficulty.MEDIUM}>{WorkoutDifficulty.MEDIUM}</MenuItem>
-                <MenuItem value={WorkoutDifficulty.HARD}>{WorkoutDifficulty.HARD}</MenuItem>
+                <MenuItem value={WorkoutDifficulty.EASY}>
+                  {WorkoutDifficulty.EASY}
+                </MenuItem>
+                <MenuItem value={WorkoutDifficulty.MEDIUM}>
+                  {WorkoutDifficulty.MEDIUM}
+                </MenuItem>
+                <MenuItem value={WorkoutDifficulty.HARD}>
+                  {WorkoutDifficulty.HARD}
+                </MenuItem>
               </TextField>
             </FormControl>
           </FormGroupWrapper>
 
-          
-   
           <FormGroupWrapper>
             <FormControl>
               <TextField
-              required
+                required
                 sx={elementBaseStyle}
                 label="Duration"
                 name="duration"

@@ -1,6 +1,6 @@
 import { IconButton, Modal, TableCell, TableRow } from '@mui/material';
-import { convertDate,convertDurationToString } from '../../utils';
-import React, { useState } from 'react';
+import { convertDate, convertDurationToString } from '../../utils';
+import React, { useContext, useState } from 'react';
 import { Delete, Edit } from '@mui/icons-material';
 import { cellBaseStyle } from './TableRowComponent.styles';
 import ModalContent from '../ModalContent/ModalContent';
@@ -23,13 +23,13 @@ interface ITableRowData {
 const TableRowComponent: React.FC<ITableRowData> = (Data) => {
   const rowData = Data.data;
 
-  const [open, setOpen] = React.useState(false);
+  const [toggleModal, setToggleModal] = useState<boolean>(false);
   const [modalType, setModalType] = useState<'edit' | 'delete'>('edit');
+
   const handleOpen = (type: 'edit' | 'delete') => {
     setModalType(type);
-    setOpen(true);
+    setToggleModal(true);
   };
-  const handleClose = () => setOpen(false);
 
   return (
     <>
@@ -71,8 +71,16 @@ const TableRowComponent: React.FC<ITableRowData> = (Data) => {
         </TableCell>
       </TableRow>
 
-      <Modal open={open} onClose={handleClose}>
-        <ModalContent modalType={modalType} data={rowData} />
+      <Modal open={toggleModal} onClose={() => setToggleModal(false)}>
+          <div>
+
+          <ModalContent
+            toggleFn={setToggleModal}
+            modalType={modalType}
+            data={rowData}
+            />
+            </div>
+
       </Modal>
     </>
   );
