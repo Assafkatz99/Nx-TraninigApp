@@ -22,10 +22,10 @@ const Homepage: React.FC = () => {
   const { data, isLoading } = useGetWorkouts();
 
 
-  return isLoading ? (
+  return  isLoading ? (
     <>loading...</>
   ) : (
-    <Container sx={containerSX}>
+   <Container sx={containerSX}>
       <LogoDiv>LOGO</LogoDiv>
 
       <Button

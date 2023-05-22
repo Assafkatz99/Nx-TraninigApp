@@ -8,7 +8,7 @@ import {
   RadioGroup,
   TextField,
 } from '@mui/material';
-import React, { useContext } from 'react';
+import React from 'react';
 import { ITableRow } from '../TableRowComponent/TableRowComponent';
 import { useFormik } from 'formik';
 import {
@@ -36,7 +36,7 @@ const CreateEditModalForm: React.FC<{ data?: ITableRow, toggleFn:(a:boolean)=>vo
       const submitValue = {
         ...values,
         duration: convertedDuration,
-        date: new Date(new Date(values.date).setTime(new Date().getTime())).toISOString()
+        date:  new Date(new Date(values.date).setTime(new Date().getTime())).toISOString()
       };
 
       if (workoutData.data) {
@@ -44,7 +44,7 @@ const CreateEditModalForm: React.FC<{ data?: ITableRow, toggleFn:(a:boolean)=>vo
         response
           .catch((err) => console.log(err))
           .then((res) => {
-          console.log(res)
+          // console.log(res)
           clientQuery.refetchQueries(['getWorkouts']);
           }
           );
@@ -54,7 +54,7 @@ const CreateEditModalForm: React.FC<{ data?: ITableRow, toggleFn:(a:boolean)=>vo
         response
           .catch((err) => console.log(err))
           .then((res) => {
-          console.log(res)
+          // console.log(res)
           clientQuery.refetchQueries(['getWorkouts']);
 
         }
