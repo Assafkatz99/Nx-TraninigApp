@@ -4,17 +4,9 @@ import React, { useContext, useState } from 'react';
 import { Delete, Edit } from '@mui/icons-material';
 import { cellBaseStyle } from './TableRowComponent.styles';
 import ModalContent from '../ModalContent/ModalContent';
+import { ITableRow } from '@nx-test/types';
 
-export interface ITableRow {
-  _id: string;
-  date: string;
-  type: string;
-  description: string;
-  duration: number;
-  difficulty: string;
-  createdAt: string;
-  updatedAt: string;
-}
+
 
 interface ITableRowData {
   data: ITableRow;

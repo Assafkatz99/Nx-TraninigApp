@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { LogoDiv, containerSX } from './styles';
+import React, { useState } from 'react';
+import { LogoDiv, containerSX, tableCellSX, tableContainerSX } from './styles';
 import {
   Button,
   Container,
@@ -21,6 +21,16 @@ const Homepage: React.FC = () => {
 
   const { data, isLoading } = useGetWorkouts();
 
+  const handleClose = () => {
+    setToggleModal(false)
+  }
+
+  const handleOpen = () =>{
+    setToggleModal(true);
+  }
+
+
+
 
   return  isLoading ? (
     <>loading...</>
@@ -31,17 +41,14 @@ const Homepage: React.FC = () => {
       <Button
         variant="contained"
         onClick={() => {
-          setToggleModal(true);
+          handleOpen()
         }}
       >
         Add Workout
       </Button>
 
       <TableContainer
-        sx={{
-          maxHeight: '60vh',
-          boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.4)',
-        }}
+        sx={tableContainerSX}
       >
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -51,11 +58,7 @@ const Homepage: React.FC = () => {
                   <TableCell
                     key={index}
                     align="center"
-                    sx={{
-                      fontWeight: 'bold',
-                      bgcolor: '#eee',
-                      maxWidth: `${100 / workoutProperties.length}%`,
-                    }}
+                    sx={tableCellSX}
                   >
                     {headerLabel}
                   </TableCell>
@@ -70,7 +73,7 @@ const Homepage: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Modal open={toggleModal} onClose={() => setToggleModal(false)}>
+      <Modal open={toggleModal} onClose={()=>{handleClose()}}>
         <div>
           <ModalContent toggleFn={setToggleModal} modalType="add" />
         </div>

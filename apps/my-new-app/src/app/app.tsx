@@ -5,7 +5,7 @@ import Homepage from './pages/Home/Homepage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 export function App() {
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({"defaultOptions":{"queries":{"refetchOnWindowFocus":false}}});
 
   return (
     <ThemeProvider theme={theme}>

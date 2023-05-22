@@ -15,19 +15,23 @@ import {
   FormGroupWrapper,
   FormStyles,
   elementBaseStyle,
+  formSX,
 } from './CreateEditModalForm.styles';
 import { WorkoutTypes, WorkoutDifficulty } from '@nx-test/types';
 import {
+  convertDateToISOString,
   convertDurationStringToNumber,
   convertWorkoutDataToRender,
 } from './CreateEditModalForm.utils';
 import { editWorkout, postWorkout } from '../../Homepage.api';
 import { useQueryClient } from '@tanstack/react-query';
 
-const CreateEditModalForm: React.FC<{ data?: ITableRow, toggleFn:(a:boolean)=>void }> = (workoutData) => {
+const CreateEditModalForm: React.FC<{
+  data?: ITableRow;
+  toggleFn: (a: boolean) => void;
+}> = (workoutData) => {
   const initialValues = convertWorkoutDataToRender(workoutData.data);
   const clientQuery = useQueryClient();
-
 
   const formik = useFormik({
     initialValues,
@@ -36,38 +40,31 @@ const CreateEditModalForm: React.FC<{ data?: ITableRow, toggleFn:(a:boolean)=>vo
       const submitValue = {
         ...values,
         duration: convertedDuration,
-        date:  new Date(new Date(values.date).setTime(new Date().getTime())).toISOString()
+        date: convertDateToISOString(values.date),
       };
 
       if (workoutData.data) {
-        const response = editWorkout(submitValue,workoutData.data._id);
+        const response = editWorkout(submitValue, workoutData.data._id);
         response
           .catch((err) => console.log(err))
           .then((res) => {
-          // console.log(res)
-          clientQuery.refetchQueries(['getWorkouts']);
-          }
-          );
-          
+            clientQuery.refetchQueries(['getWorkouts']);
+          });
       } else {
         const response = postWorkout(submitValue);
         response
           .catch((err) => console.log(err))
           .then((res) => {
-          // console.log(res)
-          clientQuery.refetchQueries(['getWorkouts']);
-
-        }
-        );
+            clientQuery.refetchQueries(['getWorkouts']);
+          });
       }
-        workoutData.toggleFn(false)
-      
+      workoutData.toggleFn(false);
     },
   });
   return (
     <>
-      <h2>{workoutData.data? 'Edit' : 'Add'} Workout</h2>
-      <form style={{ width: '100%' }} onSubmit={formik.handleSubmit}>
+      <h2>{workoutData.data ? 'Edit' : 'Add'} Workout</h2>
+      <form style={formSX} onSubmit={formik.handleSubmit}>
         <FormStyles>
           <FormGroupWrapper>
             <FormControl>

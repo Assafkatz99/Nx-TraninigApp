@@ -19,3 +19,5 @@ gap: 10px;
 export const elementBaseStyle ={
     width:"200px"
 }
+
+export const formSX = { width: '100%' }
