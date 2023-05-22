@@ -44,7 +44,8 @@
       "options": {
         "lintFilePatterns": ["apps/my-nest-app/**/*.ts"]
       }
-    },
+    }
+    ,
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
